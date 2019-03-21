@@ -28,7 +28,7 @@ RUN cd /tmp && \
     rm -rf /tmp/*
 
 # nativescript
-RUN npm install -g nativescript@5.2.0 --unsafe-perm && \
+RUN npm install -g nativescript@5.2.1 --unsafe-perm && \
     tns usage-reporting disable && \
     tns error-reporting disable
 
