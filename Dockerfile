@@ -5,7 +5,7 @@ ENV SDK_CHECKSUM=92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def
 
 # java 8
 RUN apt-get update && \
-    apt-get install -y unzip openjdk-8-jdk-headless ruby2.3 ruby2.3-dev && \
+    apt-get install -y unzip openjdk-8-jdk-headless ruby2.3 ruby2.3-dev python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/lib/apt/*
 
@@ -31,6 +31,9 @@ RUN cd /tmp && \
 RUN npm install -g nativescript@5.2.1 --unsafe-perm && \
     tns usage-reporting disable && \
     tns error-reporting disable
+
+# segno QR code generator
+RUN pip3 install segno
 
 # fastlane (needs ruby2.3 & ruby2.3-dev installed above)
 #RUN gem install fastlane -v 2.117.1 -NV
