@@ -6,7 +6,7 @@ ENV SDK_CHECKSUM=92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def
 # java 8
 RUN apt-get update && \
     apt-get install -y unzip openjdk-8-jdk-headless ruby2.3 ruby2.3-dev python3-pip locales \
-        jed less && \
+        jed less rsync && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/lib/apt/*
 
