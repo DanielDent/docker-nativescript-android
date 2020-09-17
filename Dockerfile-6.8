@@ -1,0 +1,49 @@
+FROM node:10-stretch
+
+ENV SDK_FILENAME=sdk-tools-linux-4333796.zip
+ENV SDK_CHECKSUM=92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9
+
+# java 8
+RUN apt-get update && \
+    apt-get install -y unzip openjdk-8-jdk-headless ruby2.3 ruby2.3-dev python3-pip locales \
+        jed less rsync && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/*
+
+# android sdk tools
+RUN cd /tmp && \
+    curl --silent -o $SDK_FILENAME https://dl.google.com/android/repository/$SDK_FILENAME && \
+    echo -n "$SDK_CHECKSUM  $SDK_FILENAME" | sha256sum  -c && \
+    unzip -q $SDK_FILENAME && \
+    mkdir -p /android-sdk && \
+    mv tools /android-sdk/tools && \
+    cd /android-sdk && \
+    yes | tools/bin/sdkmanager --licenses >/dev/null && \
+    tools/bin/sdkmanager \
+        "tools" \
+        "platform-tools" \
+        "platforms;android-28" \
+        "build-tools;28.0.3" \
+        "extras;google;m2repository" \
+        "extras;android;m2repository" && \
+    rm -rf /tmp/*
+
+# nativescript
+RUN npm install -g nativescript@6.8.0 --unsafe-perm && \
+    tns usage-reporting disable && \
+    tns error-reporting disable
+
+# segno QR code generator
+RUN pip3 install segno
+
+# fastlane (needs ruby2.3 & ruby2.3-dev installed above)
+#RUN gem install fastlane -v 2.117.1 -NV
+RUN gem install bundle
+
+# fix issue where there is a unicode character in the commit message (also involves install of locales above)
+RUN locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+ENV ANDROID_HOME=/android-sdk
+
+CMD ["/bin/bash"]
